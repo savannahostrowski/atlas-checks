@@ -79,6 +79,14 @@ public class DuplicateWaysCheck extends BaseCheck
         else {
             // check all edges in the map to see if they have the same geometry
             while (iterator.hasNext()) {
+                final Map.Entry pair = (Map.Entry) iterator.next();
+                final Edge e = (Edge) pair.getValue();
+                final List<Segment> segs = e.asPolyLine().segments();
+
+                if (segs.containsAll(edgeSegments)) {
+                    return
+                }
+
                 // get the current entry's segments, and check that the current edge is not totally
                 // contained by the entry's segments...otherwise flag
 
