@@ -1,112 +1,109 @@
 package org.openstreetmap.atlas.checks.validation.linear.edges;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.openstreetmap.atlas.checks.base.BaseCheck;
 import org.openstreetmap.atlas.checks.flag.CheckFlag;
-import org.openstreetmap.atlas.geography.PolyLine;
 import org.openstreetmap.atlas.geography.Segment;
 import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
 import org.openstreetmap.atlas.geography.atlas.items.Edge;
+import org.openstreetmap.atlas.tags.AreaTag;
+import org.openstreetmap.atlas.tags.HighwayTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
+import org.openstreetmap.atlas.utilities.scalars.Distance;
 
 /**
- * Auto generated Check template
+ * This check looks for partially or completely duplicated Ways via Edges.
  *
  * @author savannahostrowski
  */
 public class DuplicateWaysCheck extends BaseCheck
 {
-
     // You can use serialver to regenerate the serial UID.
     private static final long serialVersionUID = 1L;
-    public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0, number, integer}, has "
-            + "is a duplicate or has a duplicate edge segment.";
-    public static final List<String> FALLBACK_INSRUCTIONS = Arrays.asList(
-           DUPLICATE_EDGE_INSTRUCTIONS);
+    public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0,number,#}, "
+            + "has at least one duplicate segment. ";
 
-    public static final Map<Long, List<Segment>> edges = new HashMap<>();
-    public static final Iterator iterator = edges.entrySet().iterator();
+    public static final List<String> FALLBACK_INSTRUCTIONS = Arrays
+            .asList(DUPLICATE_EDGE_INSTRUCTIONS);
+    public static final int ZERO_LENGTH = 0;
+    public static final String AREA_KEY = AreaTag.KEY;
+
+    // A map of segments and list of Edge identifiers
+    private final Map<Segment, Set<Long>> globalSegments = new HashMap<>();
 
     @Override
-    protected List<String> getFallbackInsructions() {
-        return FALLBACK_INSRUCTIONS;
+    protected List<String> getFallbackInstructions()
+    {
+        return FALLBACK_INSTRUCTIONS;
     }
 
-    /**
-     * The default constructor that must be supplied. The Atlas Checks framework will generate the
-     * checks with this constructor, supplying a configuration that can be used to adjust any
-     * parameters that the check uses during operation.
-     *
-     * @param configuration
-     *            the JSON configuration for this check
-     */
     public DuplicateWaysCheck(final Configuration configuration)
     {
         super(configuration);
     }
 
-    /**
-     * This function will validate if the supplied atlas object is valid for the check.
-     *
-     * @param object
-     *            the atlas object supplied by the Atlas-Checks framework for evaluation
-     * @return {@code true} if this object should be checked
-     */
     @Override
     public boolean validCheckForObject(final AtlasObject object)
     {
-       return object instanceof Edge && !this.isFlagged(object.getIdentifier());
+        return object instanceof Edge
+                // Check to see that the edge is car navigable
+                && HighwayTag.isCarNavigableHighway(object)
+                // The edge is not part of an area
+                && !object.getTags().containsKey(AREA_KEY)
+                // The edge has not already been seen
+                && !this.isFlagged(((Edge) object).getMasterEdgeIdentifier());
     }
 
-    /**
-     * This is the actual function that will check to see whether the object needs to be flagged.
-     *
-     * @param object
-     *            the atlas object supplied by the Atlas-Checks framework for evaluation
-     * @return an optional {@link CheckFlag} object that
-     */
     @Override
     protected Optional<CheckFlag> flag(final AtlasObject object)
     {
+
+        // Get current edge object
         final Edge edge = (Edge) object;
+
+        // Get the edge identifier
+        final long identifier = edge.getIdentifier();
+
+        // Get all Segments in Edge
         final List<Segment> edgeSegments = edge.asPolyLine().segments();
 
-        // this means that there are two features with the same id (probably shouldn't happen)
-        if (edges.containsKey(edge.getIdentifier())) {
-            //throw flag
-        }
-        else {
-            // check all edges in the map to see if they have the same geometry
-            while (iterator.hasNext()) {
-                final Map.Entry pair = (Map.Entry) iterator.next();
-                final Edge e = (Edge) pair.getValue();
-                final List<Segment> segs = e.asPolyLine().segments();
-
-                if (segs.containsAll(edgeSegments)) {
-                    return
-                }
-
-                // get the current entry's segments, and check that the current edge is not totally
-                // contained by the entry's segments...otherwise flag
-
-                //check that the current entry's segments do not partially encapsulate the geometry
-                // of the the current edge, other wise flag
-
-                //else add the edge id, and geometry to the hashmap
+        // For each Segment in the Edge
+        for (final Segment segment : edgeSegments)
+        {
+            // Make sure that we aren't flagging duplicate nodes
+            if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH)))
+            {
+                continue;
             }
 
+            // Check if the Segment is in globalSegments
+            if (globalSegments.containsKey(segment))
+            {
+                // Add identifier to the list of identifiers with that segment
+                globalSegments.get(segment).add(identifier);
 
+                if (!this.isFlagged(edge.getMasterEdgeIdentifier()))
+                {
+                    this.markAsFlagged(edge.getMasterEdgeIdentifier());
+                    return Optional.of(this.createFlag(edge,
+                            this.getLocalizedInstruction(0, edge.getOsmIdentifier())));
+                }
+            }
+            else
+            {
+                // If it doesn't already exist, then add the segment and list with one identifier
+                final Set<Long> identifiers = new HashSet<>();
+                identifiers.add(identifier);
+                globalSegments.put(segment, identifiers);
+            }
         }
-
-
-
-
-
-
-
         return Optional.empty();
     }
-
-
 }
