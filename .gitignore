@@ -12,6 +12,7 @@
 *.iws
 *.ws~
 .idea/
+/data/
 /tags
 /build/
 .DS_Store

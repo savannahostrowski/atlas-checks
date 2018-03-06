@@ -11,13 +11,11 @@ import java.util.Set;
 import org.openstreetmap.atlas.checks.base.BaseCheck;
 import org.openstreetmap.atlas.checks.flag.CheckFlag;
 import org.openstreetmap.atlas.geography.Segment;
-
 import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
 import org.openstreetmap.atlas.geography.atlas.items.Edge;
-
 import org.openstreetmap.atlas.tags.HighwayTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
-
+import org.openstreetmap.atlas.utilities.scalars.Distance;
 
 /**
  * This check looks for duplicate edges or edge segments. One copy of the duplicate segment will be
@@ -38,8 +36,12 @@ public class DuplicateWaysCheck extends BaseCheck
     public static final List<String> FALLBACK_INSTRUCTIONS = Arrays
             .asList(DUPLICATE_EDGE_INSTRUCTIONS);
 
+    public static final int ZERO_LENGTH = 0;
+    public static final String AREA_KEY = "area";
+
     // a map of segments and list of Edge identifiers
     private final Map<Segment, Set<Long>> globalSegments = new HashMap<>();
+
 
     @Override
     protected List<String> getFallbackInstructions()
@@ -66,7 +68,7 @@ public class DuplicateWaysCheck extends BaseCheck
 
         // Check to see that the edge is car navigable or the edge is part of an area, we want
         // to exclude that Edge from being flagged
-        if (!HighwayTag.isCarNavigableHighway(edge) || edge.getTags().containsKey("area"))
+        if (!HighwayTag.isCarNavigableHighway(edge) || edge.getTags().containsKey(AREA_KEY))
 
         {
             return Optional.empty();
@@ -81,6 +83,10 @@ public class DuplicateWaysCheck extends BaseCheck
         // For each Segment in the Edge
         for (final Segment segment : edgeSegments)
         {
+
+            if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH))) {
+                continue;
+            }
             // Check if the Segment is in globalSegments
             if (globalSegments.containsKey(segment))
             {
