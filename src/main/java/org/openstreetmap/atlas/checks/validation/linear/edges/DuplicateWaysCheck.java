@@ -72,37 +72,26 @@ public class DuplicateWaysCheck extends BaseCheck
         final Edge edge = (Edge) object;
         final List<Segment> edgeSegments = edge.asPolyLine().segments();
 
-        // this means that there are two features with the same id (probably shouldn't happen)
-        if (edges.containsKey(edge.getIdentifier())) {
-            //throw flag
-        }
-        else {
-            // check all edges in the map to see if they have the same geometry
-            while (iterator.hasNext()) {
-                final Map.Entry pair = (Map.Entry) iterator.next();
-                final Edge e = (Edge) pair.getValue();
-                final List<Segment> segs = e.asPolyLine().segments();
+        // check all edges in the map to see if they have the same geometry
+        while (iterator.hasNext()) {
+            final Map.Entry pair = (Map.Entry) iterator.next();
+            final Edge e = (Edge) pair.getValue();
+            final List<Segment> segs = e.asPolyLine().segments();
 
-                if (segs.containsAll(edgeSegments)) {
-                    return
-                }
-
-                // get the current entry's segments, and check that the current edge is not totally
-                // contained by the entry's segments...otherwise flag
-
-                //check that the current entry's segments do not partially encapsulate the geometry
-                // of the the current edge, other wise flag
-
-                //else add the edge id, and geometry to the hashmap
+            // if the iterated edge's segments are all contained by the current edge's
+            // segments, this means that the current edge is a duplicate so we want to flag it
+            if (edgeSegments.containsAll(segs)) {
+                return Optional.of(this.createFlag(e, this.getLocalizedInstruction(0,
+                        e.getOsmIdentifier());
             }
 
+            if (segs.contains(edgeSegments)) {
+                return Optional.of(this.createFlag(e, this.getLocalizedInstruction(0,
+                        e.getOsmIdentifier()));
+            }
 
+            edges.put(e.getIdentifier(), segs);
         }
-
-
-
-
-
 
 
         return Optional.empty();
