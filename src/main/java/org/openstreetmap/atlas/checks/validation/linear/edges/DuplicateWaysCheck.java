@@ -69,8 +69,31 @@ public class DuplicateWaysCheck extends BaseCheck
     @Override
     protected Optional<CheckFlag> flag(final AtlasObject object)
     {
+
         final Edge edge = (Edge) object;
         final List<Segment> edgeSegments = edge.asPolyLine().segments();
+
+        while (iterator.hasNext()) {
+            final Map.Entry pair = (Map.Entry) iterator.next();
+            final Edge e = (Edge) pair.getValue();
+            final List<Segment> mapSegs = e.asPolyLine().segments();
+
+            if (edgeSegments.containsAll(mapSegs)) {
+                return Optional.of(this.createFlag(e, this.getLocalizedInstruction(0,
+                        e.getOsmIdentifier());
+            } else if (mapSegs.containsAll(edgeSegments)) {
+
+            } else if (mapSegs.equals(edgeSegments)) {
+
+            } else {
+
+            }
+
+
+        }
+
+
+
 
         // check all edges in the map to see if they have the same geometry
         while (iterator.hasNext()) {
