@@ -13,6 +13,7 @@ import org.openstreetmap.atlas.utilities.testing.TestAtlas.Node;
  * @author savannahostrowski
  */
 
+
 public class DuplicateWaysCheckTestRule extends CoreTestRule
 {
     private static final String TEST_1 = "37.32544,-122.033948";
@@ -46,6 +47,7 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                             @Loc(value = TEST_3) }, tags = { "highway=motorway", "area=yes"}) })
 
     private Atlas duplicateEdgeCompleteCoverageTwoEdgesArea;
+
 
     @TestAtlas(
             // nodes
@@ -95,15 +97,18 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
 
     @TestAtlas(
             // nodes
+
             nodes = { @Node(coordinates = @Loc(value = TEST_1)),
                     @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)) },
             // edges
+
             edges = {
                     @Edge(id = "4", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "5", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
+
 
     private Atlas duplicateEdgePartialCoverageTwoEdges;
 
@@ -113,6 +118,7 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                     @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)) },
             // edges
+
             edges = {
                     @Edge(id = "34", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
@@ -140,6 +146,7 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
     private Atlas duplicateEdgeNoCoverageTwoEdges;
 
 
+
     public Atlas duplicateEdgeCompleteCoverageTwoEdges()
     {
         return this.duplicateEdgeCompleteCoverageTwoEdges;
@@ -150,10 +157,12 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
         return this.duplicateEdgeCompleteCoverageTwoEdgesArea;
     }
 
+
     public Atlas duplicateEdgeCompleteCoverageThreeEdges()
     {
         return this.duplicateEdgeCompleteCoverageThreeEdges;
     }
+
 
     public Atlas getDuplicateEdgeCompleteCoverageThreeEdgesAreaOneTag()
     {
@@ -181,3 +190,9 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
     }
 
 }
+
+
+
+
+
+

@@ -83,7 +83,7 @@ public class DuplicateWaysCheck extends BaseCheck
         // For each Segment in the Edge
         for (final Segment segment : edgeSegments)
         {
-            
+
             if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH))) {
                 continue;
             }
