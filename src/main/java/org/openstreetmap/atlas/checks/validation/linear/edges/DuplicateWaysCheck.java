@@ -111,7 +111,7 @@ public class DuplicateWaysCheck extends BaseCheck
                 globalSegments.put(segment, identifiers);
             }
         }
-
+        
         return Optional.empty();
     }
 
