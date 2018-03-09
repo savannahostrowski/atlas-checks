@@ -70,53 +70,29 @@ public class DuplicateWaysCheck extends BaseCheck
     protected Optional<CheckFlag> flag(final AtlasObject object)
     {
 
+        // Cast Atlas object to Edge
         final Edge edge = (Edge) object;
-        final List<Segment> edgeSegments = edge.asPolyLine().segments();
+        // Get Edge as a List of Segments
+        final List<Segment> currentEdgeSegments = edge.asPolyLine().segments();
 
+        // For each entry in the map of seen Edges
         while (iterator.hasNext()) {
+
             final Map.Entry pair = (Map.Entry) iterator.next();
-            final Edge e = (Edge) pair.getValue();
-            final List<Segment> mapSegs = e.asPolyLine().segments();
+            final Edge mapEdge = (Edge) pair.getValue();
+            final List<Segment> mapEdgeSegments = mapEdge.asPolyLine().segments();
 
-            if (edgeSegments.containsAll(mapSegs)) {
-                return Optional.of(this.createFlag(e, this.getLocalizedInstruction(0,
-                        e.getOsmIdentifier());
-            } else if (mapSegs.containsAll(edgeSegments)) {
-
-            } else if (mapSegs.equals(edgeSegments)) {
-
-            } else {
+            if (mapEdgeSegments.containsAll(currentEdgeSegments)) {
 
             }
 
+            if (mapEdgeSegments.contains(currentEdgeSegments)) {
+
+            }
+
+            edges.put(mapEdge.getIdentifier(), mapEdgeSegments);
 
         }
-
-
-
-
-        // check all edges in the map to see if they have the same geometry
-        while (iterator.hasNext()) {
-            final Map.Entry pair = (Map.Entry) iterator.next();
-            final Edge e = (Edge) pair.getValue();
-            final List<Segment> segs = e.asPolyLine().segments();
-
-            // if the iterated edge's segments are all contained by the current edge's
-            // segments, this means that the current edge is a duplicate so we want to flag it
-            if (edgeSegments.containsAll(segs)) {
-                return Optional.of(this.createFlag(e, this.getLocalizedInstruction(0,
-                        e.getOsmIdentifier());
-            }
-
-            if (segs.contains(edgeSegments)) {
-                return Optional.of(this.createFlag(e, this.getLocalizedInstruction(0,
-                        e.getOsmIdentifier()));
-            }
-
-            edges.put(e.getIdentifier(), segs);
-        }
-
-
         return Optional.empty();
     }
 
