@@ -78,7 +78,7 @@ public class DuplicateWaysCheck extends BaseCheck
 
                 final int numberOfDuplicates = globalSegments.get(segment).size();
 
-                if (globalSegments.get(segment).size() > 1 && this.isFlagged(edge.getOsmIdentifier())) {
+                if (globalSegments.get(segment).size() > 1 && !this.isFlagged(edge.getOsmIdentifier())) {
                     this.markAsFlagged(edge.getOsmIdentifier());
                     return Optional.of(this.createFlag(edge,
                             this.getLocalizedInstruction(0, edge.getOsmIdentifier(), numberOfDuplicates - 1)));
