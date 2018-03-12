@@ -16,7 +16,6 @@ public class DuplicateWaysCheckTest
     @Rule
     public DuplicateWaysCheckTestRule setup = new DuplicateWaysCheckTestRule();
 
-
     @Rule
     public ConsumerBasedExpectedCheckVerifier verifier = new ConsumerBasedExpectedCheckVerifier();
 

@@ -18,8 +18,13 @@ import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
 
 /**
+<<<<<<< HEAD
  * This check looks for duplicate edges or edge segments. One copy of the duplicate segment will be
  * flagged for review.
+=======
+ * This check looks for duplicate edges or edge segments.  One copy of the duplicate segment will
+ * be flagged for review.
+>>>>>>> refinement of logic; still throwing too many flags for cases where there are > 2 overlapping segments
  *
  * @author savannahostrowski
  */
@@ -28,6 +33,7 @@ public class DuplicateWaysCheck extends BaseCheck
 
     // You can use serialver to regenerate the serial UID.
     private static final long serialVersionUID = 1L;
+
     public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0, number, #}, "
             + "is a duplicate, has a duplicate edge segment, or is part of a duplicate segment. "
             + "There is {1, number, #} duplicate(s)";
@@ -38,10 +44,10 @@ public class DuplicateWaysCheck extends BaseCheck
     public static final int ZERO_LENGTH = 0;
     public static final String AREA_KEY = "area";
 
+
     // a map of segments and list of Edge identifiers
-
     private final Map<Segment, Set<Long>> globalSegments = new HashMap<>();
-
+    private final Map<Edge, List<Segment>> edgeToSegment = new HashMap<>();
 
     @Override
     protected List<String> getFallbackInstructions()
@@ -49,19 +55,16 @@ public class DuplicateWaysCheck extends BaseCheck
         return FALLBACK_INSTRUCTIONS;
     }
 
-
     public DuplicateWaysCheck(final Configuration configuration)
     {
         super(configuration);
     }
-
 
     @Override
     public boolean validCheckForObject(final AtlasObject object)
     {
         return object instanceof Edge && !this.isFlagged(object.getIdentifier());
     }
-
 
     @Override
     protected Optional<CheckFlag> flag(final AtlasObject object)
@@ -114,8 +117,9 @@ public class DuplicateWaysCheck extends BaseCheck
                 globalSegments.put(segment, identifiers);
             }
         }
-        
+
         return Optional.empty();
     }
+
 
 }

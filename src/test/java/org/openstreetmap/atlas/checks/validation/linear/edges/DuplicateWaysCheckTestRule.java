@@ -13,7 +13,6 @@ import org.openstreetmap.atlas.utilities.testing.TestAtlas.Node;
  * @author savannahostrowski
  */
 
-
 public class DuplicateWaysCheckTestRule extends CoreTestRule
 {
     private static final String TEST_1 = "37.32544,-122.033948";
@@ -110,6 +109,7 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
 
 
+
     private Atlas duplicateEdgePartialCoverageTwoEdges;
 
     @TestAtlas(
@@ -142,6 +142,7 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "235", coordinates = { @Loc(value = TEST_4),
                             @Loc(value = TEST_5) }, tags = { "highway=motorway" }) })
+
 
     private Atlas duplicateEdgeNoCoverageTwoEdges;
 
@@ -190,9 +191,3 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
     }
 
 }
-
-
-
-
-
-
