@@ -7,6 +7,11 @@ import org.openstreetmap.atlas.utilities.testing.TestAtlas.Edge;
 import org.openstreetmap.atlas.utilities.testing.TestAtlas.Loc;
 import org.openstreetmap.atlas.utilities.testing.TestAtlas.Node;
 
+/**
+ * Tests for {@link DuplicateWaysCheck}
+ *
+ * @author savannahostrowski
+ */
 
 public class DuplicateWaysCheckTestRule extends CoreTestRule
 {
@@ -21,24 +26,25 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
             nodes = { @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)) },
             // edges
-            edges = { @Edge(id = "1234", coordinates = { @Loc(value = TEST_2),
+            edges = {
+                    @Edge(id = "1234", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }),
                     @Edge(id = "1235", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }) })
 
     private Atlas duplicateEdgeCompleteCoverageTwoEdges;
 
-
     @TestAtlas(
             // nodes
             nodes = { @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)) },
             // edges
-            edges = { @Edge(id = "1234", coordinates = { @Loc(value = TEST_2),
+            edges = {
+                    @Edge(id = "1", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }),
-                    @Edge(id = "1235", coordinates = { @Loc(value = TEST_2),
+                    @Edge(id = "2", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }),
-                    @Edge(id = "1236", coordinates = { @Loc(value = TEST_2),
+                    @Edge(id = "3", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }) })
 
     private Atlas duplicateEdgeCompleteCoverageThreeEdges;
@@ -49,9 +55,10 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                     @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)) },
             // edges
-            edges = { @Edge(id = "1234", coordinates = { @Loc(value = TEST_1),
-                            @Loc(value = TEST_2), @Loc(value = TEST_3) }),
-                    @Edge(id = "1235", coordinates = { @Loc(value = TEST_2),
+            edges = {
+                    @Edge(id = "4", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
+                            @Loc(value = TEST_3) }),
+                    @Edge(id = "5", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }) })
 
     private Atlas duplicateEdgePartialCoverageTwoEdges;
@@ -62,11 +69,12 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                     @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)) },
             // edges
-            edges = { @Edge(id = "1234", coordinates = { @Loc(value = TEST_1),
-                            @Loc(value = TEST_2), @Loc(value = TEST_3) }),
-                    @Edge(id = "1235", coordinates = { @Loc(value = TEST_1),
+            edges = {
+                    @Edge(id = "34", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
+                            @Loc(value = TEST_3) }),
+                    @Edge(id = "35", coordinates = { @Loc(value = TEST_1),
                             @Loc(value = TEST_2) }),
-                    @Edge(id = "1236", coordinates = { @Loc(value = TEST_2),
+                    @Edge(id = "36", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }) })
 
     private Atlas duplicateEdgePartialCoverageThreeEdges;
@@ -75,11 +83,14 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
             // nodes
             nodes = { @Node(coordinates = @Loc(value = TEST_1)),
                     @Node(coordinates = @Loc(value = TEST_2)),
-                    @Node(coordinates = @Loc(value = TEST_3)) },
+                    @Node(coordinates = @Loc(value = TEST_3)),
+                    @Node(coordinates = @Loc(value = TEST_4)),
+                    @Node(coordinates = @Loc(value = TEST_5))},
             // edges
-            edges = { @Edge(id = "1234", coordinates = { @Loc(value = TEST_1),
-                    @Loc(value = TEST_2), @Loc(value = TEST_3) }),
-                    @Edge(id = "1235", coordinates = { @Loc(value = TEST_4),
+            edges = {
+                    @Edge(id = "234", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
+                            @Loc(value = TEST_3) }),
+                    @Edge(id = "235", coordinates = { @Loc(value = TEST_4),
                             @Loc(value = TEST_5) }) })
 
     private Atlas duplicateEdgeNoCoverageTwoEdges;
@@ -109,10 +120,4 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
         return this.duplicateEdgeNoCoverageTwoEdges;
     }
 
-
 }
-
-
-
-
-
