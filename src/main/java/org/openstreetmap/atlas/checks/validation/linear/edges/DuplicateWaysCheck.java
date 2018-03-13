@@ -18,13 +18,8 @@ import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
 
 /**
-<<<<<<< HEAD
  * This check looks for duplicate edges or edge segments. One copy of the duplicate segment will be
  * flagged for review.
-=======
- * This check looks for duplicate edges or edge segments.  One copy of the duplicate segment will
- * be flagged for review.
->>>>>>> refinement of logic; still throwing too many flags for cases where there are > 2 overlapping segments
  *
  * @author savannahostrowski
  */
@@ -47,7 +42,6 @@ public class DuplicateWaysCheck extends BaseCheck
 
     // a map of segments and list of Edge identifiers
     private final Map<Segment, Set<Long>> globalSegments = new HashMap<>();
-    private final Map<Edge, List<Segment>> edgeToSegment = new HashMap<>();
 
     @Override
     protected List<String> getFallbackInstructions()
@@ -75,7 +69,6 @@ public class DuplicateWaysCheck extends BaseCheck
         // Check to see that the edge is car navigable or the edge is part of an area, we want
         // to exclude that Edge from being flagged
         if (!HighwayTag.isCarNavigableHighway(edge) || edge.getTags().containsKey(AREA_KEY))
-
         {
             return Optional.empty();
         }
@@ -120,6 +113,5 @@ public class DuplicateWaysCheck extends BaseCheck
 
         return Optional.empty();
     }
-
 
 }

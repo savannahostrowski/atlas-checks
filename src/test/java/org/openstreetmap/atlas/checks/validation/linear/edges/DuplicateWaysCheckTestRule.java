@@ -108,8 +108,6 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                     @Edge(id = "5", coordinates = { @Loc(value = TEST_2),
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
 
-
-
     private Atlas duplicateEdgePartialCoverageTwoEdges;
 
     @TestAtlas(
@@ -142,7 +140,6 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                             @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "235", coordinates = { @Loc(value = TEST_4),
                             @Loc(value = TEST_5) }, tags = { "highway=motorway" }) })
-
 
     private Atlas duplicateEdgeNoCoverageTwoEdges;
 
