@@ -3,7 +3,6 @@ package org.openstreetmap.atlas.checks.validation.linear.edges;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,15 +10,15 @@ import java.util.Set;
 
 import org.openstreetmap.atlas.checks.base.BaseCheck;
 import org.openstreetmap.atlas.checks.flag.CheckFlag;
-import org.openstreetmap.atlas.geography.Location;
 import org.openstreetmap.atlas.geography.Segment;
 import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
 import org.openstreetmap.atlas.geography.atlas.items.Edge;
+import org.openstreetmap.atlas.tags.HighwayTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
 
 /**
- * This check looks for duplicate edges or edge segments.  One copy of the duplicate segment will
- * be flagged for review.
+ * This check looks for duplicate edges or edge segments. One copy of the duplicate segment will be
+ * flagged for review.
  *
  * @author savannahostrowski
  */
@@ -36,7 +35,6 @@ public class DuplicateWaysCheck extends BaseCheck
 
     // a map of segments and list of Edge identifiers
     private final Map<Segment, Set<Long>> globalSegments = new HashMap<>();
-    private final Map<Edge, List<Segment>> edgeToSegment = new HashMap<>();
 
     @Override
     protected List<String> getFallbackInstructions()
@@ -61,6 +59,11 @@ public class DuplicateWaysCheck extends BaseCheck
         // Get current edge object
         final Edge edge = (Edge) object;
 
+        if (!HighwayTag.isCarNavigableHighway(edge))
+        {
+            return Optional.empty();
+        }
+
         // Get the edge identifier
         final long identifier = edge.getIdentifier();
 
@@ -78,11 +81,12 @@ public class DuplicateWaysCheck extends BaseCheck
 
                 final int numberOfDuplicates = globalSegments.get(segment).size();
 
-                if (globalSegments.get(segment).size() > 1 && !this.isFlagged(edge.getOsmIdentifier())) {
+                if (globalSegments.get(segment).size() > 1
+                        && !this.isFlagged(edge.getOsmIdentifier()))
+                {
                     this.markAsFlagged(edge.getOsmIdentifier());
-                    return Optional.of(this.createFlag(edge,
-                            this.getLocalizedInstruction(0, edge.getOsmIdentifier(), numberOfDuplicates - 1)));
-
+                    return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
+                            edge.getOsmIdentifier(), numberOfDuplicates - 1)));
                 }
             }
             else
@@ -94,9 +98,7 @@ public class DuplicateWaysCheck extends BaseCheck
             }
         }
 
-
         return Optional.empty();
     }
-
 
 }

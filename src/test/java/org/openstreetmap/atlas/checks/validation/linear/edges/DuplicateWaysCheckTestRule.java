@@ -28,9 +28,9 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
             // edges
             edges = {
                     @Edge(id = "1234", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }),
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "1235", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }) })
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
 
     private Atlas duplicateEdgeCompleteCoverageTwoEdges;
 
@@ -41,11 +41,11 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
             // edges
             edges = {
                     @Edge(id = "1", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }),
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "2", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }),
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "3", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }) })
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
 
     private Atlas duplicateEdgeCompleteCoverageThreeEdges;
 
@@ -57,9 +57,9 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
             // edges
             edges = {
                     @Edge(id = "4", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }),
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "5", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }) })
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
 
     private Atlas duplicateEdgePartialCoverageTwoEdges;
 
@@ -71,11 +71,11 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
             // edges
             edges = {
                     @Edge(id = "34", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }),
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "35", coordinates = { @Loc(value = TEST_1),
-                            @Loc(value = TEST_2) }),
+                            @Loc(value = TEST_2) }, tags = { "highway=motorway" }),
                     @Edge(id = "36", coordinates = { @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }) })
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }) })
 
     private Atlas duplicateEdgePartialCoverageThreeEdges;
 
@@ -85,13 +85,13 @@ public class DuplicateWaysCheckTestRule extends CoreTestRule
                     @Node(coordinates = @Loc(value = TEST_2)),
                     @Node(coordinates = @Loc(value = TEST_3)),
                     @Node(coordinates = @Loc(value = TEST_4)),
-                    @Node(coordinates = @Loc(value = TEST_5))},
+                    @Node(coordinates = @Loc(value = TEST_5)) },
             // edges
             edges = {
                     @Edge(id = "234", coordinates = { @Loc(value = TEST_1), @Loc(value = TEST_2),
-                            @Loc(value = TEST_3) }),
+                            @Loc(value = TEST_3) }, tags = { "highway=motorway" }),
                     @Edge(id = "235", coordinates = { @Loc(value = TEST_4),
-                            @Loc(value = TEST_5) }) })
+                            @Loc(value = TEST_5) }, tags = { "highway=motorway" }) })
 
     private Atlas duplicateEdgeNoCoverageTwoEdges;
 
