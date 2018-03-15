@@ -34,7 +34,6 @@ Our first goal is to validate the incoming Atlas Object. We know two things abou
 After the preliminary filtering of features, we take each Edge and use a series of conditional
 statements to validate whether we do in fact want to flag the feature for inspection.
 
-
 ```java
     protected Optional<CheckFlag> flag(final AtlasObject object)
         {
@@ -85,41 +84,5 @@ statements to validate whether we do in fact want to flag the feature for inspec
 
 ```
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-```
-
->>>>>>> updates to docs
-
-
-
-
 To learn more about the code, please look at the comments in the source code for the check.
-<<<<<<< HEAD
 [DuplicateWaysCheck.java](../../src/main/java/org/openstreetmap/atlas/checks/validation/linear/edges/DuplicateWaysCheck.java)
-=======
-[DuplicateWaysCheck.java](../../src/main/java/org/openstreetmap/atlas/checks/validation/ultiFeatureRoundaboutCheck.jMava)
->>>>>>> updates to docs

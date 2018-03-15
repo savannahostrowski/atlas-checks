@@ -11,8 +11,10 @@ import java.util.Set;
 import org.openstreetmap.atlas.checks.base.BaseCheck;
 import org.openstreetmap.atlas.checks.flag.CheckFlag;
 import org.openstreetmap.atlas.geography.Segment;
+import org.openstreetmap.atlas.geography.atlas.items.Area;
 import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
 import org.openstreetmap.atlas.geography.atlas.items.Edge;
+import org.openstreetmap.atlas.geography.atlas.items.ItemType;
 import org.openstreetmap.atlas.tags.HighwayTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
@@ -68,6 +70,7 @@ public class DuplicateWaysCheck extends BaseCheck
 
         // Check to see that the edge is car navigable or the edge is part of an area, we want
         // to exclude that Edge from being flagged
+
         if (!HighwayTag.isCarNavigableHighway(edge) || edge.getTags().containsKey(AREA_KEY))
         {
             return Optional.empty();
