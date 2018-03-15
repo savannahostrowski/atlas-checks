@@ -31,19 +31,8 @@ Our first goal is to validate the incoming Atlas Object. We know two things abou
 
 ```
 
-After the preliminary filtering of features, 
-
-
-
-
-we need to get all the roundabout's edges. Sometimes
-roundabouts are drawn as multiple edges so it's important to get all the edges before getting its
-valence. This will also prevent us from creating a MapRoulette Challenge for each individual Edge.
-
-
-
-* *Edge edge* - current edge being analyzed
-* *Map<Long, Edge> roundaboutEdges* - Map of Edge ID and associated Edge data
+After the preliminary filtering of features, we take each Edge and use a series of conditional
+statements to validate whether we do in fact want to flag the feature for inspection.
 
 ```java
     protected Optional<CheckFlag> flag(final AtlasObject object)
@@ -93,35 +82,14 @@ valence. This will also prevent us from creating a MapRoulette Challenge for eac
             return Optional.empty();
         }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 ```
+
+First, each Edge is checked to determine if it is car navigable. If it is not, then we do not flag the Edge.
+We then check that 
 
 
 
 
 
 To learn more about the code, please look at the comments in the source code for the check.
-[DuplicateWaysCheck.java](../../src/main/java/org/openstreetmap/atlas/checks/validation/ultiFeatureRoundaboutCheck.jMava)
+[DuplicateWaysCheck.java](../../src/main/java/org/openstreetmap/atlas/checks/validation/linear/edges/DuplicateWaysCheck.java)
