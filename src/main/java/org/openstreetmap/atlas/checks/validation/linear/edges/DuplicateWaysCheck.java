@@ -59,7 +59,13 @@ public class DuplicateWaysCheck extends BaseCheck
     @Override
     public boolean validCheckForObject(final AtlasObject object)
     {
-        return object instanceof Edge && !this.isFlagged(object.getIdentifier());
+        return object instanceof Edge
+                // Check to see that the edge is car navigable
+                && HighwayTag.isCarNavigableHighway(object)
+                // The edge is not part of an area
+                && !object.getTags().containsKey(AREA_KEY)
+                // The edge has not already been seen
+                && !this.isFlagged(object.getIdentifier());
     }
 
     @Override
@@ -67,14 +73,6 @@ public class DuplicateWaysCheck extends BaseCheck
     {
         // Get current edge object
         final Edge edge = (Edge) object;
-
-        // Check to see that the edge is car navigable or the edge is part of an area, we want
-        // to exclude that Edge from being flagged
-
-        if (!HighwayTag.isCarNavigableHighway(edge) || edge.getTags().containsKey(AREA_KEY))
-        {
-            return Optional.empty();
-        }
 
         // Get the edge identifier
         final long identifier = edge.getIdentifier();
@@ -98,9 +96,9 @@ public class DuplicateWaysCheck extends BaseCheck
                 final int numberOfDuplicates = globalSegments.get(segment).size();
 
                 if (globalSegments.get(segment).size() > 1
-                        && !this.isFlagged(edge.getOsmIdentifier()))
+                        && !this.isFlagged(edge.getIdentifier()))
                 {
-                    this.markAsFlagged(edge.getOsmIdentifier());
+                    this.markAsFlagged(edge.getIdentifier());
                     return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
                             edge.getOsmIdentifier(), numberOfDuplicates - 1)));
                 }
