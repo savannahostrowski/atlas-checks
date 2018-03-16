@@ -43,7 +43,7 @@ public class DuplicateWaysCheckTest
         this.verifier.actual(this.setup.duplicateEdgeCompleteCoverageThreeEdges(),
                 new DuplicateWaysCheck(ConfigurationResolver.emptyConfiguration()));
 
-        this.verifier.globallyVerify(flags -> Assert.assertEquals(1, flags.size()));
+        this.verifier.globallyVerify(flags -> Assert.assertEquals(2, flags.size()));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class DuplicateWaysCheckTest
         this.verifier.actual(this.setup.duplicateEdgePartialCoverageThreeEdges(),
                 new DuplicateWaysCheck(ConfigurationResolver.emptyConfiguration()));
 
-        this.verifier.globallyVerify(flags -> Assert.assertEquals(1, flags.size()));
+        this.verifier.globallyVerify(flags -> Assert.assertEquals(2, flags.size()));
     }
 
     @Test

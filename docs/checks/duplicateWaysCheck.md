@@ -21,13 +21,22 @@ We’ll use this information to filter our potential flag candidates.
 
 Our first goal is to validate the incoming Atlas Object. We know two things about roundabouts:
 * Must be a valid Edge
+* Must be car-navigable
+* Must not be part of an area
 * Must have not already been flagged
 
+
 ```java
-    public boolean validCheckForObject(final AtlasObject object)
-    {
-            return object instanceof Edge && !this.isFlagged(object.getIdentifier());
-    }
+   public boolean validCheckForObject(final AtlasObject object)
+       {
+           return object instanceof Edge
+                   // Check to see that the edge is car navigable
+                   && HighwayTag.isCarNavigableHighway(object)
+                   // The edge is not part of an area
+                   && !object.getTags().containsKey(AREA_KEY)
+                   // The edge has not already been seen
+                   && !this.isFlagged(object.getIdentifier());
+       }
 
 ```
 
@@ -40,11 +49,6 @@ statements to validate whether we do in fact want to flag the feature for inspec
             // Get current edge object
             final Edge edge = (Edge) object;
     
-            if (!HighwayTag.isCarNavigableHighway(edge))
-            {
-                return Optional.empty();
-            }
-    
             // Get the edge identifier
             final long identifier = edge.getIdentifier();
     
@@ -54,6 +58,10 @@ statements to validate whether we do in fact want to flag the feature for inspec
             // For each Segment in the Edge
             for (final Segment segment : edgeSegments)
             {
+    
+                if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH))) {
+                    continue;
+                }
                 // Check if the Segment is in globalSegments
                 if (globalSegments.containsKey(segment))
                 {
@@ -63,9 +71,9 @@ statements to validate whether we do in fact want to flag the feature for inspec
                     final int numberOfDuplicates = globalSegments.get(segment).size();
     
                     if (globalSegments.get(segment).size() > 1
-                            && !this.isFlagged(edge.getOsmIdentifier()))
+                            && !this.isFlagged(edge.getIdentifier()))
                     {
-                        this.markAsFlagged(edge.getOsmIdentifier());
+                        this.markAsFlagged(edge.getIdentifier());
                         return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
                                 edge.getOsmIdentifier(), numberOfDuplicates - 1)));
                     }
@@ -83,6 +91,14 @@ statements to validate whether we do in fact want to flag the feature for inspec
         }
 
 ```
+
+Within the check body, we get all Segments in each Edge, store each unique Segment as a key in a 
+HashMap, and store each Edge which contains that Segment as the value. If that Segment already exists
+in the HashMap (so the list of Edges is greater than 1) and the Edge identifier has not already been
+flagged, we flag the Edge. If that Segment does not already contain that key, we add the Segment,
+Edge identifier key value pair into the HashMap.
+
+
 
 To learn more about the code, please look at the comments in the source code for the check.
 [DuplicateWaysCheck.java](../../src/main/java/org/openstreetmap/atlas/checks/validation/linear/edges/DuplicateWaysCheck.java)
