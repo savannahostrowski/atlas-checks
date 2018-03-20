@@ -83,10 +83,11 @@ public class DuplicateWaysCheck extends BaseCheck
         // For each Segment in the Edge
         for (final Segment segment : edgeSegments)
         {
-
+            // Make sure that we aren't flagging duplicate nodes
             if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH))) {
                 continue;
             }
+
             // Check if the Segment is in globalSegments
             if (globalSegments.containsKey(segment))
             {
@@ -96,9 +97,9 @@ public class DuplicateWaysCheck extends BaseCheck
                 final int numberOfDuplicates = globalSegments.get(segment).size();
 
                 if (globalSegments.get(segment).size() > 1
-                        && !this.isFlagged(edge.getIdentifier()))
+                        && !this.isFlagged(edge.getOsmIdentifier()))
                 {
-                    this.markAsFlagged(edge.getIdentifier());
+                    this.markAsFlagged(edge.getOsmIdentifier());
                     return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
                             edge.getOsmIdentifier(), numberOfDuplicates - 1)));
                 }
