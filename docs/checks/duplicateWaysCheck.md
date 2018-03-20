@@ -44,7 +44,8 @@ After the preliminary filtering of features, we take each Edge and use a series 
 statements to validate whether we do in fact want to flag the feature for inspection.
 
 ```java
-    protected Optional<CheckFlag> flag(final AtlasObject object)
+    @Override
+        protected Optional<CheckFlag> flag(final AtlasObject object)
         {
             // Get current edge object
             final Edge edge = (Edge) object;
@@ -58,24 +59,23 @@ statements to validate whether we do in fact want to flag the feature for inspec
             // For each Segment in the Edge
             for (final Segment segment : edgeSegments)
             {
-    
+                // Make sure that we aren't flagging duplicate nodes
                 if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH))) {
                     continue;
                 }
+    
                 // Check if the Segment is in globalSegments
                 if (globalSegments.containsKey(segment))
                 {
                     // add identifier to the list of identifiers with that segment
                     globalSegments.get(segment).add(identifier);
     
-                    final int numberOfDuplicates = globalSegments.get(segment).size();
-    
                     if (globalSegments.get(segment).size() > 1
-                            && !this.isFlagged(edge.getIdentifier()))
+                            && !this.isFlagged(edge.getMasterEdgeIdentifier()))
                     {
-                        this.markAsFlagged(edge.getIdentifier());
+                        this.markAsFlagged(edge.getMasterEdgeIdentifier());
                         return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
-                                edge.getOsmIdentifier(), numberOfDuplicates - 1)));
+                                edge.getOsmIdentifier())));
                     }
                 }
                 else
@@ -89,7 +89,6 @@ statements to validate whether we do in fact want to flag the feature for inspec
     
             return Optional.empty();
         }
-
 ```
 
 Within the check body, we get all Segments in each Edge, store each unique Segment as a key in a 

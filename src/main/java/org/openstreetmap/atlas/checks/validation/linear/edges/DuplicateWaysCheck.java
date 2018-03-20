@@ -29,7 +29,7 @@ public class DuplicateWaysCheck extends BaseCheck
     private static final long serialVersionUID = 1L;
 
     public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0,number,#}, "
-            + "at least one duplicate segment. ";
+            + "at least one duplicate segment.";
 
     public static final List<String> FALLBACK_INSTRUCTIONS = Arrays
             .asList(DUPLICATE_EDGE_INSTRUCTIONS);
