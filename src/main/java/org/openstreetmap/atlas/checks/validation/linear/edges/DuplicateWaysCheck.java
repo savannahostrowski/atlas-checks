@@ -11,10 +11,7 @@ import java.util.Set;
 import org.openstreetmap.atlas.checks.base.BaseCheck;
 import org.openstreetmap.atlas.checks.flag.CheckFlag;
 import org.openstreetmap.atlas.geography.Segment;
-import org.openstreetmap.atlas.geography.atlas.items.Area;
-import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
-import org.openstreetmap.atlas.geography.atlas.items.Edge;
-import org.openstreetmap.atlas.geography.atlas.items.ItemType;
+import org.openstreetmap.atlas.geography.atlas.items.*;
 import org.openstreetmap.atlas.tags.HighwayTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
@@ -31,9 +28,8 @@ public class DuplicateWaysCheck extends BaseCheck
     // You can use serialver to regenerate the serial UID.
     private static final long serialVersionUID = 1L;
 
-    public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0, number, #}, "
-            + "is a duplicate, has a duplicate edge segment, or is part of a duplicate segment. "
-            + "There is {1, number, #} duplicate(s)";
+    public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0,number,#}, "
+            + "at least one duplicate segment. ";
 
     public static final List<String> FALLBACK_INSTRUCTIONS = Arrays
             .asList(DUPLICATE_EDGE_INSTRUCTIONS);
@@ -94,14 +90,12 @@ public class DuplicateWaysCheck extends BaseCheck
                 // add identifier to the list of identifiers with that segment
                 globalSegments.get(segment).add(identifier);
 
-                final int numberOfDuplicates = globalSegments.get(segment).size();
-
                 if (globalSegments.get(segment).size() > 1
                         && !this.isFlagged(edge.getMasterEdgeIdentifier()))
                 {
                     this.markAsFlagged(edge.getMasterEdgeIdentifier());
                     return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
-                            edge.getOsmIdentifier(), numberOfDuplicates - 1)));
+                            edge.getOsmIdentifier())));
                 }
             }
             else
