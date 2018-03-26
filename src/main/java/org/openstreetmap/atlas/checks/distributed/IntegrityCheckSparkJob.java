@@ -148,8 +148,9 @@ public class IntegrityCheckSparkJob extends SparkJob
                 POOL_DURATION_BEFORE_KILL);
         checksToRun.stream().filter(check -> check.validCheckForCountry(country))
                 .forEach(check -> checkExecutionPool.queue(new RunnableCheck(country, check,
-                        new MultiIterable<>(atlas.items(), atlas.relations()), MapRouletteClient
-                                .instance(configuration))));
+                        new MultiIterable<>(atlas.items(), atlas.relations(),
+                                findComplexEntities(check, atlas)),
+                        MapRouletteClient.instance(configuration))));
         checkExecutionPool.close();
     }
 
@@ -426,13 +427,14 @@ public class IntegrityCheckSparkJob extends SparkJob
         }
         return true;
     }
+
     /**
      * Gets a complex entities
      *
      * @param check
-     *          A {@link BaseCheck} object
+     *            A {@link BaseCheck} object
      * @param atlas
-     *          An {@link Atlas} object
+     *            An {@link Atlas} object
      * @return An {@link Iterable} of {@link ComplexEntity}s
      */
     private static Iterable<ComplexEntity> findComplexEntities(final BaseCheck check,
