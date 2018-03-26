@@ -429,7 +429,7 @@ public class IntegrityCheckSparkJob extends SparkJob
     }
 
     /**
-     * Gets a complex entities
+     * Gets complex entities
      *
      * @param check
      *            A {@link BaseCheck} object
