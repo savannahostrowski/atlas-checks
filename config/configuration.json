@@ -4,7 +4,7 @@
       "org.openstreetmap.atlas.checks.validation"
     ],
     "type": "org.openstreetmap.atlas.checks.base.BaseCheck",
-    "enabled.value.default": true
+    "enabled.value.default": false
   },
   "PoolSizeCheck": {
     "surface": {
@@ -38,6 +38,14 @@
       "description": "Tasks contain node locations that have duplicate nodes found.",
       "blurb": "Duplicate Nodes",
       "instruction": "Open your favorite editor and remove one or more of the duplicate nodes until only one remains.",
+      "difficulty": "EASY"
+    }
+  },
+  "DuplicateWaysCheck": {
+    "challenge": {
+      "description": "Tasks contain Ways which have been partially or completely duplicated.",
+      "blurb": "Duplicate Ways",
+      "instruction": "Open your favorite editor and remove the duplicated edges in the OSM way.",
       "difficulty": "EASY"
     }
   },
