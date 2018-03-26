@@ -44,7 +44,7 @@ After the preliminary filtering of features, we take each Edge and use a series 
 statements to validate whether we do in fact want to flag the feature for inspection.
 
 ```java
-    @Override
+     @Override
         protected Optional<CheckFlag> flag(final AtlasObject object)
         {
             // Get current edge object
@@ -70,8 +70,7 @@ statements to validate whether we do in fact want to flag the feature for inspec
                     // add identifier to the list of identifiers with that segment
                     globalSegments.get(segment).add(identifier);
     
-                    if (globalSegments.get(segment).size() > 1
-                            && !this.isFlagged(edge.getMasterEdgeIdentifier()))
+                    if (!this.isFlagged(edge.getMasterEdgeIdentifier()))
                     {
                         this.markAsFlagged(edge.getMasterEdgeIdentifier());
                         return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
@@ -91,11 +90,12 @@ statements to validate whether we do in fact want to flag the feature for inspec
         }
 ```
 
-Within the check body, we get all Segments in each Edge, store each unique Segment as a key in a 
-HashMap, and store each Edge which contains that Segment as the value. If that Segment already exists
-in the HashMap (so the list of Edges is greater than 1) and the Edge identifier has not already been
-flagged, we flag the Edge. If that Segment does not already contain that key, we add the Segment,
-Edge identifier key value pair into the HashMap.
+Within the check body, we first check that the Segment is greater than zero meters in length to
+ensure that we are not just looking at a duplicated node. Next,we get all Segments in each Edge,
+store each unique Segment as a key in a HashMap, and store each Edge which contains that Segment as 
+the value. If that Segment already exists in the HashMap (so the list of Edges is greater than 1) 
+and the Edge identifier has not already been flagged, we flag the Edge. If that Segment does not 
+already contain that key, we add the Segment, Edge identifier key value pair into the HashMap.
 
 
 

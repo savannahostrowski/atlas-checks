@@ -11,34 +11,29 @@ import java.util.Set;
 import org.openstreetmap.atlas.checks.base.BaseCheck;
 import org.openstreetmap.atlas.checks.flag.CheckFlag;
 import org.openstreetmap.atlas.geography.Segment;
-import org.openstreetmap.atlas.geography.atlas.items.*;
+import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
+import org.openstreetmap.atlas.geography.atlas.items.Edge;
+import org.openstreetmap.atlas.tags.AreaTag;
 import org.openstreetmap.atlas.tags.HighwayTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
 
 /**
- * This check looks for duplicate edges or edge segments. One copy of the duplicate segment will be
- * flagged for review.
+ * This check looks for partially or completely duplicated Ways via Edges. 
  *
  * @author savannahostrowski
  */
 public class DuplicateWaysCheck extends BaseCheck
 {
-
     // You can use serialver to regenerate the serial UID.
     private static final long serialVersionUID = 1L;
-
     public static final String DUPLICATE_EDGE_INSTRUCTIONS = "This way, {0,number,#}, "
-            + "at least one duplicate segment.";
-
+            + "has at least one duplicate segment.";
     public static final List<String> FALLBACK_INSTRUCTIONS = Arrays
             .asList(DUPLICATE_EDGE_INSTRUCTIONS);
-
     public static final int ZERO_LENGTH = 0;
-    public static final String AREA_KEY = "area";
-
-
-    // a map of segments and list of Edge identifiers
+    public static final String AREA_KEY = AreaTag.KEY;
+    // A map of segments and list of Edge identifiers
     private final Map<Segment, Set<Long>> globalSegments = new HashMap<>();
 
     @Override
@@ -61,7 +56,7 @@ public class DuplicateWaysCheck extends BaseCheck
                 // The edge is not part of an area
                 && !object.getTags().containsKey(AREA_KEY)
                 // The edge has not already been seen
-                && !this.isFlagged(object.getIdentifier());
+                && !this.isFlagged(((Edge) object).getMasterEdgeIdentifier());
     }
 
     @Override
@@ -80,27 +75,27 @@ public class DuplicateWaysCheck extends BaseCheck
         for (final Segment segment : edgeSegments)
         {
             // Make sure that we aren't flagging duplicate nodes
-            if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH))) {
+            if (!segment.length().isGreaterThan(Distance.meters(ZERO_LENGTH)))
+            {
                 continue;
             }
 
             // Check if the Segment is in globalSegments
             if (globalSegments.containsKey(segment))
             {
-                // add identifier to the list of identifiers with that segment
+                // Add identifier to the list of identifiers with that segment
                 globalSegments.get(segment).add(identifier);
 
-                if (globalSegments.get(segment).size() > 1
-                        && !this.isFlagged(edge.getMasterEdgeIdentifier()))
+                if (!this.isFlagged(edge.getMasterEdgeIdentifier()))
                 {
                     this.markAsFlagged(edge.getMasterEdgeIdentifier());
-                    return Optional.of(this.createFlag(edge, this.getLocalizedInstruction(0,
-                            edge.getOsmIdentifier())));
+                    return Optional.of(this.createFlag(edge,
+                            this.getLocalizedInstruction(0, edge.getOsmIdentifier())));
                 }
             }
             else
             {
-                // if it doesn't already exist, then add the segment and list with one identifier
+                // If it doesn't already exist, then add the segment and list with one identifier
                 final Set<Long> identifiers = new HashSet<>();
                 identifiers.add(identifier);
                 globalSegments.put(segment, identifiers);
@@ -109,5 +104,4 @@ public class DuplicateWaysCheck extends BaseCheck
 
         return Optional.empty();
     }
-
 }
