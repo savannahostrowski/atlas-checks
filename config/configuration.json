@@ -4,7 +4,7 @@
       "org.openstreetmap.atlas.checks.validation"
     ],
     "type": "org.openstreetmap.atlas.checks.base.BaseCheck",
-    "enabled.value.default": true
+    "enabled.value.default": false
   },
   "PoolSizeCheck": {
     "surface": {
@@ -106,8 +106,18 @@
       "tags":"highway"
     }
   },
+  "RoundaboutValenceCheck": {
+    "connections.minimum": 2.0,
+    "connections.maximum": 14.0,
+    "challenge": {
+      "description": "Verify that the valence of the roundabout is sensible.",
+      "blurb": "Modify Polyline intersections with the roundabout edges",
+      "instruction": "Open your favorite editor and move modify polyline intersections with the roundabout.",
+      "difficulty": "NORMAL"
+    }
+  },
   "SelfIntersectingPolylineCheck": {
-    "tags.filter": "highway->*|waterway->*|building->*",
+    "tags.filter":"highway->*&highway->!construction&highway->!footway&highway->!path|building->*",
     "challenge": {
       "description": "Verify that the same Polyline does not intersect itself at any point.",
       "blurb": "Modify Polylines such that they do not self intersect.",
