@@ -19,7 +19,7 @@ import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
 
 /**
- * This check looks for partially or completely duplicated Ways via Edges. 
+ * This check looks for partially or completely duplicated Ways via Edges.
  *
  * @author savannahostrowski
  */
