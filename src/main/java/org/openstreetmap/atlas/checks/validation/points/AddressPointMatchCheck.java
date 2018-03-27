@@ -15,6 +15,9 @@ import org.openstreetmap.atlas.geography.Rectangle;
 import org.openstreetmap.atlas.geography.atlas.items.AtlasObject;
 import org.openstreetmap.atlas.geography.atlas.items.Edge;
 import org.openstreetmap.atlas.geography.atlas.items.Point;
+import org.openstreetmap.atlas.tags.AddressHousenumberTag;
+import org.openstreetmap.atlas.tags.AddressStreetTag;
+import org.openstreetmap.atlas.tags.names.NameTag;
 import org.openstreetmap.atlas.utilities.configuration.Configuration;
 import org.openstreetmap.atlas.utilities.scalars.Distance;
 
@@ -38,9 +41,9 @@ public class AddressPointMatchCheck extends BaseCheck
     private static final List<String> FALLBACK_INSTRUCTIONS = Arrays.asList(
             NO_STREET_NAME_POINT_INSTRUCTIONS, NO_STREET_NAME_EDGE_INSTRUCTIONS,
             NO_SUGGESTED_NAMES_INSTRUCTIONS);
-    private static final String ADDRESS_STREET_NUMBER_KEY = "addr:housenumber";
-    private static final String POINT_STREET_NAME_KEY = "addr:street";
-    private static final String EDGE_STREET_NAME_KEY = "name";
+    private static final String ADDRESS_STREET_NUMBER_KEY = AddressHousenumberTag.KEY;
+    private static final String POINT_STREET_NAME_KEY = AddressStreetTag.KEY;
+    private static final String EDGE_STREET_NAME_KEY = NameTag.KEY;
     private static final double BOUNDS_SIZE_DEFAULT = 150.0;
 
     private final Distance boundsSize;
@@ -87,21 +90,17 @@ public class AddressPointMatchCheck extends BaseCheck
 
         // Get all Points inside the bounding box
         final Iterable<Point> interiorPoints = point.getAtlas().pointsWithin(box);
-        // Convert the Iterable into a Stream for filtering
-        final Stream<Point> pointStream = StreamSupport.stream(interiorPoints.spliterator(), false);
-        // Remove Points that have null as their street name as they cannot be candidates for
-        // a street for the Point of interest
-        final Set<Point> points = pointStream
+        // Convert the Iterable into a Stream for filtering, remove Points that have null as their
+        // street name as they cannot be candidates for a street for the Point of interest
+        final Set<Point> points = StreamSupport.stream(interiorPoints.spliterator(), false)
                 .filter(interiorPoint -> interiorPoint.getTag(POINT_STREET_NAME_KEY).isPresent())
                 .collect(Collectors.toSet());
 
         // Get all Edges that intersect or are contained within the bounding box
         final Iterable<Edge> interiorEdges = point.getAtlas().edgesIntersecting(box);
-        // Convert the Iterable into a Stream for filtering
-        final Stream<Edge> edgeStream = StreamSupport.stream(interiorEdges.spliterator(), false);
-        // Remove Edge that have null as their street name as they cannot be candidates for
-        // a street for the Point of interest
-        final Set<Edge> edges = edgeStream
+        // Convert the Iterable into a Stream for filtering, remove Edge that have null as their
+        // street name as they cannot be candidates for a street for the Point of interest
+        final Set<Edge> edges = StreamSupport.stream(interiorEdges.spliterator(), false)
                 .filter(interiorEdge -> interiorEdge.getTag(EDGE_STREET_NAME_KEY).isPresent())
                 .collect(Collectors.toSet());
 
