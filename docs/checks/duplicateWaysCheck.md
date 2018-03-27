@@ -91,7 +91,7 @@ statements to validate whether we do in fact want to flag the feature for inspec
 ```
 
 Within the check body, we first check that the Segment is greater than zero meters in length to
-ensure that we are not just looking at a duplicated node. Next,we get all Segments in each Edge,
+ensure that we are not just looking at a duplicated node. Next, we get all Segments in each Edge,
 store each unique Segment as a key in a HashMap, and store each Edge which contains that Segment as 
 the value. If that Segment already exists in the HashMap (so the list of Edges is greater than 1) 
 and the Edge identifier has not already been flagged, we flag the Edge. If that Segment does not 
